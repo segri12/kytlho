@@ -1,0 +1,173 @@
+static void Main(string[] args)
+        {
+            string[] fullName = { };
+            string[] occupation = { };
+            bool isWorking = true;
+
+            Console.WriteLine("Добро пожаловать в базу данных! Помни солнце ещё не село воин, проверяй всё, работай и удачи.");
+
+            while (isWorking)
+            {
+                int addDossier = 1;
+                int showDossier = 2;
+                int deleteDossier = 3;
+                int searchDossier = 4;
+                int exitMenu = 5;
+
+                Console.WriteLine($"Введите {addDossier}, чтобы добавить досье;");
+                Console.WriteLine($"Введите {showDossier}, чтобы вывести все досье в базе данных;");
+                Console.WriteLine($"Введите {deleteDossier}, чтобы удалить досье;");
+                Console.WriteLine($"Введите {searchDossier}, чтобы совершить поиск по фамилии;");
+                Console.WriteLine($"Введите {exitMenu}, чтобы выйти из базы данных.");   
+                int task = Convert.ToInt32(Console.ReadLine());
+
+                if (task == addDossier)  
+                {
+                    EmployeePosition(ref fullName, ref occupation);   
+                }
+                
+                else if (task == showDossier)
+                {
+                    ShowInfo(fullName, occupation); 
+                }
+                else if (task == deleteDossier)  
+                {
+                    DeletePosition(ref fullName, ref occupation); 
+                }
+                else if (task == searchDossier) 
+                {
+                    SearchEmployeePosition(fullName, occupation);  
+                }
+                else if (task == exitMenu)
+                {
+                    isWorking = false;
+                    Console.WriteLine("Работа программы завершена!");
+                }
+                else
+                {
+                    Console.WriteLine("Неверная команда.");
+                }
+
+            }
+        }
+
+        static string[] AddInfo(string[] info, string newInfo)
+        {
+            string[] tempArray = new string[info.Length + 1];
+
+            for (int i = 0; i < info.Length; i++)
+            {
+                tempArray[i] = info[i];
+            }
+
+            info = tempArray;
+            info[info.Length - 1] = newInfo;
+            return info;
+        }
+
+        static void EmployeePosition(ref string[] fullName, ref string[] occupation)
+        {
+            string newFullName;
+            string newOccupation;
+
+            Console.Clear();
+            Console.WriteLine("Введите ФИО сотрудника: ");
+            newFullName = Console.ReadLine();
+            fullName = AddInfo(fullName, newFullName);
+            Console.WriteLine("Введите должность сотрудника: ");
+            newOccupation = Console.ReadLine();
+            occupation = AddInfo(occupation, newOccupation);
+            Console.WriteLine("Досье добавлено! Нажмите любую кнопку, чтобы продолжить.");
+            Console.ReadKey();
+            Console.Clear();
+        }
+
+        static void ShowInfo(string[] fullName, string[] occupation)
+        {
+            Console.Clear();
+            int personNumber = 0;
+
+            for (int i = 0; i < fullName.Length; i++)
+            {
+                personNumber++;
+                Console.WriteLine($"{personNumber}. {fullName[i]} - {occupation[i]};");
+            }
+
+            Console.WriteLine("Это вся имеющаяся информация о сотрудниках в базе данных.");
+            Console.WriteLine("Нажмите любую клавишу, чтобы продолжить.");
+            Console.ReadKey();
+            Console.Clear();
+        }
+
+        static string[] RemoveInfo(string[] info, int removeIndex)
+        {
+            string[] tempArray = new string[info.Length - 1];
+
+            for (int i = 0; i < removeIndex; i++)
+            {
+                tempArray[i] = info[i];
+            }
+
+            for (int i = removeIndex; i < tempArray.Length; i++)
+            {
+                tempArray[i] = info[i + 1];
+            }
+
+            info = tempArray;
+            return info;
+        }
+
+        static void DeletePosition(ref string[] fullName, ref string[] occupation)
+        {
+            int removeIndex;  
+                             
+            Console.Clear();
+            Console.WriteLine("Введите номер досье, который хотите удалить.");
+            removeIndex = Convert.ToInt32(Console.ReadLine()) - 1; 
+            fullName = RemoveInfo(fullName, removeIndex);
+            occupation = RemoveInfo(occupation, removeIndex);
+            Console.WriteLine("Досье было удалено! Нажмите любую кнопку, чтобы продолжить.");
+            Console.ReadKey();
+            Console.Clear();
+        }
+
+
+        static void FindInfo(string secondName, string[] occupation, string findInfo)
+        {
+            int personNumber = 0;
+            bool wasFound = false;
+            string foundFullName;
+
+            for (int i = 0; i < occupation.Length; i++)
+            {
+                personNumber++;
+
+                if (secondName.ToLower() == findInfo.ToLower())
+                {
+                    string foundOccupation = occupation[i];
+                    foundFullName = secondName;
+                    Console.WriteLine("Доступна следующая информация:");
+                    Console.WriteLine($"Сотрудник {foundFullName} находится в базе данных под номером {personNumber} и занимает должность {foundOccupation}.");
+                    wasFound = true;
+                }
+            }
+
+            if (wasFound == false)
+            {
+                Console.WriteLine("Запрашиваемая информация отсутствует в базе данных.");
+            }
+        }
+
+        static void SearchEmployeePosition(string[] fullName, string[] occupation)
+        {
+            Console.Clear();
+            Console.WriteLine("Введите фамилию сотрудника, досье которого хотите найти.");
+            string findInfo = Console.ReadLine();
+            string secondName = fullName[0];       
+            FindInfo(secondName, occupation, findInfo);
+            Console.WriteLine("Нажмите любую кнопку, чтобы продолжить.");
+            Console.ReadKey();
+            Console.Clear();
+        }
+    }
+}
